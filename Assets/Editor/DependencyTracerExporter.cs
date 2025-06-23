@@ -30,8 +30,7 @@ namespace DependencyTracer
         private void OnEnable()
         {
             // デフォルトの出力パスを設定
-            var projectPath = Path.GetDirectoryName(Application.dataPath);
-            _outputPath = Path.Combine(projectPath, PackageFolderName);
+            _outputPath = Path.Combine(Application.dataPath, PackageFolderName);
         }
         
         private void OnGUI()
