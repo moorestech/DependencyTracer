@@ -1,0 +1,8 @@
+{
+  "name": "com.moorestech.dependency-tracer",
+  "version": "1.0.0",
+  "displayName": "DependencyTracer",
+  "description": "",
+  "unity": "2020.3",
+  "dependencies": { }
+}
