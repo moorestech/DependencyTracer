@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -85,12 +86,76 @@ namespace DependencyTracer.Core
         }
 
         /// <summary>
+        /// 指定されたアセットが間接的に依存しているすべてのアセットのGUIDリストを取得
+        /// </summary>
+        public static GUID[] GetAllDependencies(GUID assetGuid, bool includeIndirect = true)
+        {
+            LoadDatabaseIfNeeded();
+            if (!includeIndirect)
+            {
+                return GetDependencies(assetGuid);
+            }
+
+            var allDependencies = new HashSet<GUID>();
+            var toProcess = new Queue<GUID>();
+            toProcess.Enqueue(assetGuid);
+
+            while (toProcess.Count > 0)
+            {
+                var current = toProcess.Dequeue();
+                var dependencies = _data?.GetDependencies(current) ?? Array.Empty<GUID>();
+                
+                foreach (var dep in dependencies)
+                {
+                    if (allDependencies.Add(dep))
+                    {
+                        toProcess.Enqueue(dep);
+                    }
+                }
+            }
+
+            return new List<GUID>(allDependencies).ToArray();
+        }
+
+        /// <summary>
         /// 指定されたアセットに依存しているアセットのGUIDリストを取得
         /// </summary>
         public static GUID[] GetReferences(GUID assetGuid)
         {
             LoadDatabaseIfNeeded();
             return _data?.GetReferences(assetGuid) ?? Array.Empty<GUID>();
+        }
+
+        /// <summary>
+        /// 指定されたアセットに間接的に依存しているすべてのアセットのGUIDリストを取得
+        /// </summary>
+        public static GUID[] GetAllReferences(GUID assetGuid, bool includeIndirect = true)
+        {
+            LoadDatabaseIfNeeded();
+            if (!includeIndirect)
+            {
+                return GetReferences(assetGuid);
+            }
+
+            var allReferences = new HashSet<GUID>();
+            var toProcess = new Queue<GUID>();
+            toProcess.Enqueue(assetGuid);
+
+            while (toProcess.Count > 0)
+            {
+                var current = toProcess.Dequeue();
+                var references = _data?.GetReferences(current) ?? Array.Empty<GUID>();
+                
+                foreach (var reference in references)
+                {
+                    if (allReferences.Add(reference))
+                    {
+                        toProcess.Enqueue(reference);
+                    }
+                }
+            }
+
+            return new List<GUID>(allReferences).ToArray();
         }
 
         /// <summary>

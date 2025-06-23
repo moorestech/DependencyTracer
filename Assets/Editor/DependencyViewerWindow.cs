@@ -26,6 +26,12 @@ namespace DependencyTracer
         
         [SerializeField]
         private bool _showReferences = true;
+        
+        [SerializeField]
+        private bool _showIndirectDependencies = false;
+        
+        [SerializeField]
+        private bool _showHierarchicalView = true;
 
         private GUIStyle _headerStyle;
         private GUIStyle _subHeaderStyle;
@@ -142,6 +148,20 @@ namespace DependencyTracer
                 _showDependencies = GUILayout.Toggle(_showDependencies, new GUIContent("依存先", "このアセットが依存しているアセット"), EditorStyles.toolbarButton, GUILayout.Width(60));
                 _showReferences = GUILayout.Toggle(_showReferences, new GUIContent("参照元", "このアセットを参照しているアセット"), EditorStyles.toolbarButton, GUILayout.Width(60));
 
+                GUILayout.Space(10);
+
+                // 新しいオプション
+                _showIndirectDependencies = GUILayout.Toggle(_showIndirectDependencies, new GUIContent("間接依存", "間接的な依存関係も表示"), EditorStyles.toolbarButton, GUILayout.Width(60));
+                
+                GUILayout.Space(10);
+                
+                _showHierarchicalView = GUILayout.Toggle(_showHierarchicalView, new GUIContent("階層表示", "ファイル階層で表示"), EditorStyles.toolbarButton, GUILayout.Width(60));
+                var listViewContent = new GUIContent("リスト表示", "名前順でリスト表示");
+                if (GUILayout.Toggle(!_showHierarchicalView, listViewContent, EditorStyles.toolbarButton, GUILayout.Width(70)))
+                {
+                    _showHierarchicalView = false;
+                }
+
                 GUILayout.FlexibleSpace();
 
                 // クリアボタン
@@ -190,7 +210,7 @@ namespace DependencyTracer
                     
                     using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
                     {
-                        var shouldRemove = item.DrawGUI(_showDependencies, _showReferences);
+                        var shouldRemove = item.DrawGUI(_showDependencies, _showReferences, _showIndirectDependencies, _showHierarchicalView);
                         if (shouldRemove)
                         {
                             _assetItems.RemoveAt(i);

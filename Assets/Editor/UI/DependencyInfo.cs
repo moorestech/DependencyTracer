@@ -16,6 +16,8 @@ namespace DependencyTracer.UI
         private readonly GUIContent _content;
         
         public bool IsValid => _asset != null;
+        public string AssetName => _asset != null ? _asset.name : _content.text;
+        public string AssetPath => _assetPath;
 
         public DependencyInfo(GUID guid)
         {
