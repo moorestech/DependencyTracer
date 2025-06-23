@@ -48,8 +48,27 @@ namespace DependencyTracer.UI
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                // アセットボタン
-                var clicked = GUILayout.Button(_content, GUIUtils.AssetLabelStyle);
+                var clicked = false;
+                
+                // アイコンを小さく表示
+                if (_asset != null)
+                {
+                    var icon = AssetUtils.GetAssetIcon(_asset);
+                    if (icon != null)
+                    {
+                        var iconRect = GUILayoutUtility.GetRect(16, 16, GUILayout.Width(16), GUILayout.Height(16));
+                        GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
+                    }
+                    
+                    // アセット名ボタン（アイコンなし）
+                    clicked = GUILayout.Button(_asset.name, GUIUtils.SmallAssetLabelStyle);
+                }
+                else
+                {
+                    // Missing/Unknownアセットの場合
+                    GUILayout.Space(20); // アイコン分のスペース
+                    clicked = GUILayout.Button(_content.text, GUIUtils.SmallAssetLabelStyle);
+                }
                 
                 // タイプラベル
                 if (_asset != null)

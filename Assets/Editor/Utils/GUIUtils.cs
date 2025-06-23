@@ -11,6 +11,7 @@ namespace DependencyTracer.Utils
         private static GUIStyle _foldoutStyle;
         private static GUIStyle _assetLabelStyle;
         private static GUIStyle _countBadgeStyle;
+        private static GUIStyle _smallAssetLabelStyle;
 
         /// <summary>
         /// カスタムFoldoutスタイルを取得
@@ -75,6 +76,27 @@ namespace DependencyTracer.Utils
         }
 
         /// <summary>
+        /// 小さいアセットラベル用スタイルを取得
+        /// </summary>
+        public static GUIStyle SmallAssetLabelStyle
+        {
+            get
+            {
+                if (_smallAssetLabelStyle == null)
+                {
+                    _smallAssetLabelStyle = new GUIStyle(EditorStyles.label)
+                    {
+                        padding = new RectOffset(2, 2, 2, 2),
+                        margin = new RectOffset(0, 0, 0, 0),
+                        fixedHeight = 16,
+                        imagePosition = ImagePosition.ImageLeft
+                    };
+                }
+                return _smallAssetLabelStyle;
+            }
+        }
+
+        /// <summary>
         /// 横線を描画
         /// </summary>
         public static void DrawHorizontalLine(float height = 1f, float margin = 2f)
@@ -118,6 +140,32 @@ namespace DependencyTracer.Utils
             var content = new GUIContent(label, icon);
             
             return GUILayout.Button(content, style);
+        }
+
+        /// <summary>
+        /// 小さいアセットアイコン付きボタンを描画
+        /// </summary>
+        public static bool DrawSmallAssetButton(Object asset, string label)
+        {
+            if (asset == null) return false;
+            
+            var icon = AssetUtils.GetAssetIcon(asset);
+            
+            // アイコンを小さくリサイズしたGUIContentを作成
+            var content = new GUIContent(label);
+            
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                // アイコンを固定サイズで描画
+                if (icon != null)
+                {
+                    var iconRect = GUILayoutUtility.GetRect(16, 16, GUILayout.Width(16), GUILayout.Height(16));
+                    GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
+                }
+                
+                // ラベルボタン
+                return GUILayout.Button(label, SmallAssetLabelStyle);
+            }
         }
 
         /// <summary>
