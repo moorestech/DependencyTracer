@@ -371,7 +371,7 @@ namespace DependencyTracer.UI
                     {
                         using (new EditorGUILayout.HorizontalScope())
                         {
-                            GUILayout.Space((depth + 1) * 15); // インデント
+                            GUILayout.Space((depth + 1) * 20); // インデント
                             item.DrawGUI();
                         }
                     }
