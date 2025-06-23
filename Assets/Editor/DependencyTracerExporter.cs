@@ -148,10 +148,6 @@ namespace DependencyTracer
                 CreateReadmeFile(_outputPath);
                 copiedFiles.Add("README.txt");
                 
-                // アセンブリ定義ファイルのサンプルを作成
-                CreateAsmdefSample(_outputPath);
-                copiedFiles.Add("DependencyTracer.asmdef.sample");
-                
                 // 成功メッセージ
                 var message = $"エクスポート完了!\n\n" +
                              $"出力先: {_outputPath}\n\n" +
@@ -218,29 +214,6 @@ DependencyTracerは、Unityプロジェクト内のアセット間の依存関�
 ";
             File.WriteAllText(readmePath, content, System.Text.Encoding.UTF8);
         }
-        
-        private void CreateAsmdefSample(string outputPath)
-        {
-            var asmdefPath = Path.Combine(outputPath, "DependencyTracer.asmdef.sample");
-            var content = @"{
-    ""name"": ""DependencyTracer"",
-    ""rootNamespace"": ""DependencyTracer"",
-    ""references"": [],
-    ""includePlatforms"": [
-        ""Editor""
-    ],
-    ""excludePlatforms"": [],
-    ""allowUnsafeCode"": false,
-    ""overrideReferences"": true,
-    ""precompiledReferences"": [
-        ""DependencyTracer.dll""
-    ],
-    ""autoReferenced"": false,
-    ""defineConstraints"": [],
-    ""versionDefines"": [],
-    ""noEngineReferences"": false
-}";
-            File.WriteAllText(asmdefPath, content);
-        }
+
     }
 }
