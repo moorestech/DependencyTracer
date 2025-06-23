@@ -135,12 +135,11 @@ namespace DependencyTracer.UI
             // 依存先を取得
             var dependencies = GetDependenciesToShow(showIndirect);
             var label = showIndirect ? "依存先 (間接含む)" : "依存先 (直接のみ)";
+            label += $" {dependencies.Count}";
             
             using (new EditorGUILayout.HorizontalScope())
             {
                 _dependenciesFoldout = EditorGUILayout.Foldout(_dependenciesFoldout, label, true, GUIUtils.FoldoutStyle);
-                GUIUtils.DrawCountBadge(dependencies.Count, new Color(0.3f, 0.6f, 1f));
-                GUILayout.FlexibleSpace();
             }
 
             if (_dependenciesFoldout && dependencies.Count > 0)
@@ -163,12 +162,11 @@ namespace DependencyTracer.UI
             // 参照元を取得
             var references = GetReferencesToShow(showIndirect);
             var label = showIndirect ? "参照元 (間接含む)" : "参照元 (直接のみ)";
+            label += $" {references.Count}";
             
             using (new EditorGUILayout.HorizontalScope())
             {
                 _referencesFoldout = EditorGUILayout.Foldout(_referencesFoldout, label, true, GUIUtils.FoldoutStyle);
-                GUIUtils.DrawCountBadge(references.Count, new Color(1f, 0.6f, 0.3f));
-                GUILayout.FlexibleSpace();
             }
 
             if (_referencesFoldout && references.Count > 0)
@@ -322,6 +320,7 @@ namespace DependencyTracer.UI
             var hasItems = node.Items.Count > 0;
             var totalCount = node.Items.Count + GetTotalItemCount(node);
             
+            name = $"{name} ({totalCount})";
             // フォルダのfoldout状態を管理
             var foldoutKey = $"{depth}_{name}";
             if (!_folderFoldouts.ContainsKey(foldoutKey))
@@ -347,9 +346,6 @@ namespace DependencyTracer.UI
                         true,
                         foldoutStyle
                     );
-                    
-                    GUILayout.Space(5);
-                    GUILayout.Label($"({totalCount})", EditorStyles.miniLabel);
                 }
                 else
                 {
